@@ -1,0 +1,17 @@
+{% if access_ports %}
+{% for ap in access_ports %}
+{% if ap.description %}
+set interfaces {{ ap.name }} description {{ ap.description }}
+{% endif %}
+set interfaces {{ ap.name }} unit 0 family ethernet-switching interface-mode access
+set interfaces {{ ap.name }} unit 0 family ethernet-switching vlan members {{ ap.vlan }}
+{% if ap.native_vlan %}
+set interfaces {{ ap.name }} native-vlan-id {{ ap.native_vlan }}
+{% endif %}
+set interfaces {{ ap.name }} unit 0 family ethernet-switching storm-control default
+{% if ap.voice_vlan %}
+set switch-options voip interface {{ ap.name }} vlan {{ ap.voice_vlan }}
+{% endif %}
+{% endfor %}
+{% endif %}
+

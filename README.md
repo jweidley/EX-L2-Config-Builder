@@ -7,10 +7,9 @@ syntax to configure uplink interfaces, management interface, vlans, IRB interfac
 
 # Running Playbook
 1. Update master-vars.yml file with specifics for your network. See in file instructions.
-2. Update files under group_vars/all with specifics for your network. See in file instructions.
-3. a. Build configs: ansible-playbook build.yml
-3. b. Build configs & deploy: ansible-playbook -i inventory build_deploy.yml
-4. Generated configs are in the ./Configs directory
+2. Update the access_ports.yml file for each access switch under host_vars/. See in file instructions.
+3. Update files under group_vars/all with specifics for your network. See in file instructions.
+4. a. Build configs: ansible-playbook build.yml
+4. b. Build configs & deploy: ansible-playbook -i inventory build_deploy.yml
+5. Generated configs are in the ./Configs directory
 
-# TODO
-- Provide a way to add access switch specific user interface VLAN configurations

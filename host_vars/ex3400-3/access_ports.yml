@@ -1,0 +1,21 @@
+---
+######################################################################################
+# Access Port Configuration
+#  - name: interface name (ex: ge-0/0/0)
+#  - description: interface description. Can be FALSE.
+#  - vlan: user VLAN ID
+#  - voice_vlan: Voice VLAN. Can be FALSE.
+#  - native_vlan: Native VLAN for untagged traffic. Can be FALSE.
+######################################################################################
+access_ports:
+  - name: ge-0/0/4
+    description: workstation4
+    vlan: 100
+    voice_vlan: 301
+    native_vlan: FALSE
+  - name: ge-0/0/5
+    description: FALSE
+    vlan: 100
+    voice_vlan: 301
+    native_vlan: 200
+

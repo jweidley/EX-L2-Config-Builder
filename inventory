@@ -1,8 +1,14 @@
-[ex_lab]
+[ex_lab:children]
+ex_distros
+ex_access
+
+[ex_distros]
 ex4600-1	junos_host=192.168.5.76
 ex4600-2	junos_host=192.168.5.77
-ex4300-1	junos_host=192.168.5.78
-ex4300-2	junos_host=192.168.5.79
-ex4300-3	junos_host=192.168.5.80
-ex4300-4	junos_host=192.168.5.81
+
+[ex_access]
+ex3400-1	junos_host=192.168.5.78
+ex3400-2	junos_host=192.168.5.79
+ex3400-3	junos_host=192.168.5.80
+ex3400-4	junos_host=192.168.5.81
 

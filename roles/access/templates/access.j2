@@ -13,6 +13,7 @@ set system syslog user * any emergency
 set system syslog file messages any notice
 set system syslog file messages authorization info
 set system syslog file interactive-commands interactive-commands any
+{% include "Configs/Access/" + item.name + ".set" ignore missing %}
 {% if item.uplinks %}
 {% for interface in item.uplinks %}
 set interfaces {{ interface }} description "vex1;ge-0/0/1"

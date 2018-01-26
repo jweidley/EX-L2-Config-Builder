@@ -1,7 +1,20 @@
 ---
-- name: Generate Device configuration files
-  hosts: localhost
+ - name: create BGP junos configuration
+   hosts: ex_access
+   connection: local
+   gather_facts: no
 
-  roles:
-    - access
-    - distro
+   tasks:
+
+   - name: Render BGP configuration for junos devices
+     template: src={{playbook_dir}}/templates/access_ports.j2 dest={{playbook_dir}}/Configs/Access/{{ inventory_hostname }}.set
+
+ - name: Generate Device configuration files
+   hosts: ex_lab
+   connection: local
+   gather_facts: no
+ 
+   roles:
+     - access
+     - distro
+
