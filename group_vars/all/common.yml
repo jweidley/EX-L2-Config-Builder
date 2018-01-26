@@ -1,0 +1,32 @@
+---
+#########################################################################################################
+# Common Variables
+# These are variables that can be defined and called from any role template.
+#########################################################################################################
+
+# root_hash: The root account password hash value.
+root_hash: $1$iuFS5Reh$ci8k9JymoZ4vFaCs8nUr9.
+
+# aaa_server: A list of the IP addresses of the AAA servers (RADIUS or TACACS)
+aaa_servers:
+   - 10.0.3.2
+   - 10.0.30.2
+
+# aaa_hash: The hash value of the shared secret password for the AAA server (RADIUS or TACACS)
+aaa_hash: $9$FaqS/CuDIckvXIRW-dbg5aZIjQQ
+
+# ntp_servers: A list of IP addresses that will be used to build out the NTP server stanza.
+ntp_servers:
+   - 10.0.3.2
+   - 192.168.50.2
+
+# mstp_config_name: The unique value for the MSTP config name.
+mstp_config_name: bldg1.fl2
+
+# enable_oam: TRUE|FALSE. Determines if OAM LFM should be created for uplinks/downlinks
+enable_oam: TRUE
+
+# Login Banner: Banner to display at login. Long banners need to be 1 continuous line (not carriage returns).
+banner: ################## Authorized Access Only ##################
+
+## End of file ##

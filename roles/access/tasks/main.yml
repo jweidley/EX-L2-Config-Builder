@@ -1,0 +1,4 @@
+---
+- name: Generate Access Switch Configuration Files
+  template: src=access.j2 dest={{ playbook_dir }}/Configs/{{item.name}}-config.set
+  with_items: "{{access_switches}}"

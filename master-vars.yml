@@ -1,0 +1,78 @@
+---
+#######################################################################
+# Distribution Switch Section
+#  - name: hostname of the switch
+#  - mgmt_int: fxp0/me0/em0, depending on platform
+#  - ip, netmask & gateway relate to the management interface
+#  - uplinks: Number of links to access switches.
+#             ! DONOT count the distro interconnect (its auto-generated)
+#  - uplink_type: ge/xe/et to match port type
+#  - uplink_fpc: FPC slot for the uplink ports
+#  - uplink_pic: PIC slot for the uplink ports
+#  - stp_priority: master/backup, A way to alternate mastership of MSTP instances
+#######################################################################
+distro_switches:
+  - name: ex4600-1
+    mgmt_int: em0
+    ip: 192.168.5.76
+    netmask: 24
+    gateway: 192.168.5.1
+    uplinks: 4
+    uplink_type: xe
+    uplink_fpc: 0
+    uplink_pic: 0
+    stp_priority: master
+  - name: ex4600-2
+    mgmt_int: em0
+    ip: 192.168.5.77
+    netmask: 24
+    gateway: 192.168.5.1
+    uplinks: 4
+    uplink_type: xe
+    uplink_fpc: 0
+    uplink_pic: 0
+    stp_priority: backup
+
+#######################################################################
+# Access Switch Section
+#  - name: hostname of the switch
+#  - mgmt_int: fxp0/me0/em0, depending on platform
+#  - ip, netmask & gateway relate to the management interface
+#  - uplinks: the ports that will connect to the distribution switches
+#######################################################################
+access_switches:
+  - name: ex3400-1
+    mgmt_int: me0
+    ip: 192.168.5.78
+    netmask: 24
+    gateway: 192.168.5.1
+    uplinks:
+      - ge-0/2/0
+      - ge-0/2/1
+  - name: ex3400-2
+    mgmt_int: me0
+    ip: 192.168.5.79
+    netmask: 24
+    gateway: 192.168.5.1
+    uplinks:
+      - ge-0/2/0
+      - ge-0/2/1
+  - name: ex3400-3
+    mgmt_int: me0
+    ip: 192.168.5.80
+    netmask: 24
+    gateway: 192.168.5.1
+    uplinks:
+      - ge-0/2/0
+      - ge-0/2/1
+  - name: ex3400-4
+    mgmt_int: me0
+    ip: 192.168.5.81
+    netmask: 24
+    gateway: 192.168.5.1
+    uplinks:
+      - ge-0/2/0
+      - ge-0/2/1
+
+
+## End of file ##

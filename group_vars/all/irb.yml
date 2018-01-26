@@ -1,0 +1,26 @@
+---
+#########################################################################################################
+# IRB Interfaces: Create IRB interfaces on distribution switches with VRRP for resilency.
+#  - tag: VLAN ID.
+#  - name: Friendly name for VLAN.
+#          !!! *MUST* match the vlan name in the vlans.yml file !!!
+#  - vip: VRRP virtual IP that is shared between distro switches.
+#  - master: VRRP master IP address.
+#  - backup: VRRP backup IP address.
+#  - netmask: Netmask for the interfaces.
+#########################################################################################################
+irbs:
+  - tag: 100
+    name: v100.users.mil
+    vip: 172.16.100.1
+    master: 172.16.100.3
+    backup: 172.16.100.4
+    netmask: 24
+  - tag: 101
+    name: v101.users.mil
+    vip: 172.16.101.1
+    master: 172.16.101.3
+    backup: 172.16.101.4
+    netmask: 24
+
+## end of file ##

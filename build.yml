@@ -1,0 +1,7 @@
+---
+- name: Generate Device configuration files
+  hosts: localhost
+
+  roles:
+    - access
+    - distro

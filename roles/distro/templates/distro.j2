@@ -1,0 +1,88 @@
+set system host-name {{ item.name }}
+set system auto-snapshot
+set system time-zone Zulu
+set system arp aging-timer 5
+set system internet-options icmpv4-rate-limit packet-rate 10
+set system root-authentication encrypted-password "{{ root_hash }}"
+set system login message "{{ banner }}"
+set system services ssh root-login allow
+set system services ssh protocol-version v2
+set system services ssh max-sessions-per-connection 32
+set system services netconf ssh
+set system syslog user * any emergency
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system syslog file interactive-commands interactive-commands any
+{% if item.uplinks %}
+{% for i in range(item.uplinks + 1) %}
+set interfaces {{ item.uplink_type }}-{{ item.uplink_fpc }}/{{ item.uplink_pic }}/{{ i }} description "UPLINK"
+set interfaces {{ item.uplink_type }}-{{ item.uplink_fpc }}/{{ item.uplink_pic }}/{{ i }} unit 0 family ethernet-switching interface-mode trunk
+set interfaces {{ item.uplink_type }}-{{ item.uplink_fpc }}/{{ item.uplink_pic }}/{{ i }} unit 0 family ethernet-switching vlan members all
+set interfaces {{ item.uplink_type }}-{{ item.uplink_fpc }}/{{ item.uplink_pic }}/{{ i }} unit 0 family ethernet-switching storm-control default
+{% endfor %}
+{% endif %}
+set interfaces {{ item.mgmt_int }} unit 0 family inet address {{ item.ip }}/{{ item.netmask }}
+set forwarding-options storm-control-profiles default all bandwidth-percentage 50
+set forwarding-options storm-control-profiles default action-shutdown
+set routing-options static route 0.0.0.0/0 next-hop {{ item.gateway }}
+set protocols lldp port-id-subtype interface-name
+set protocols lldp interface all
+{% if enable_oam %}
+set protocols oam ethernet link-fault-management action-profile link-adj-loss event link-adjacency-loss
+set protocols oam ethernet link-fault-management action-profile link-adj-loss action link-down
+{% for i in range(item.uplinks + 1) %}
+set protocols oam ethernet link-fault-management interface {{ item.uplink_type }}-{{ item.uplink_fpc }}/{{ item.uplink_pic }}/{{ i }} apply-action-profile link-adj-loss
+set protocols oam ethernet link-fault-management interface {{ item.uplink_type }}-{{ item.uplink_fpc }}/{{ item.uplink_pic }}/{{ i }} link-discovery active
+{% endfor %}
+{% endif %}
+set protocols mstp configuration-name {{mstp_config_name }}
+set protocols mstp revision-level 2
+set protocols mstp bpdu-block-on-edge
+{% if item.uplinks %}
+{% for i in range(item.uplinks + 1) %}
+set protocols mstp interface {{ item.uplink_type }}-{{ item.uplink_fpc }}/{{ item.uplink_pic }}/{{ i }} mode point-to-point
+set protocols mstp interface {{ item.uplink_type }}-{{ item.uplink_fpc }}/{{ item.uplink_pic }}/{{ i }} bpdu-timeout-action block
+{% endfor %}
+{% endif %}
+set protocols mstp msti 1 vlan 1-499
+set protocols mstp msti 1 vlan 1001-1499
+set protocols mstp msti 1 vlan 2000-2499
+set protocols mstp msti 1 vlan 3000-3499
+set protocols mstp msti 2 vlan 500-999
+set protocols mstp msti 2 vlan 1500-1999
+set protocols mstp msti 2 vlan 2500-2999
+set protocols mstp msti 2 vlan 3500-3999
+set protocols mstp msti 3 vlan 4000-4094
+{% if item.stp_priority == "master"%}
+set protocols mstp msti 1 bridge-priority 4k
+set protocols mstp msti 2 bridge-priority 8k
+set protocols mstp msti 3 bridge-priority 4k
+{% else %}
+set protocols mstp msti 1 bridge-priority 8k
+set protocols mstp msti 2 bridge-priority 4k
+set protocols mstp msti 3 bridge-priority 8k
+{% endif %}
+{% if vlans %}
+{% for v in vlans %}
+set vlans {{ v.name }} vlan-id {{ v.tag }}
+{% endfor %}
+{% endif %}
+{% if irbs %}
+set interfaces irb description "integrated routing and bridging interface"
+{% for irb in irbs %}
+set interfaces irb unit {{ irb.tag }} description "L3 for {{ irb.name }}"
+{% if item.stp_priority == "master" %}
+set interfaces irb unit {{ irb.tag }} family inet address {{ irb.master }}/{{ irb.netmask }} vrrp-group 1 virtual-address {{ irb.vip }}
+set interfaces irb unit {{ irb.tag }} family inet address {{ irb.master }}/{{ irb.netmask }} vrrp-group 1 priority 100
+set interfaces irb unit {{ irb.tag }} family inet address {{ irb.master }}/{{ irb.netmask }} vrrp-group 1 no-preempt
+set interfaces irb unit {{ irb.tag }} family inet address {{ irb.master }}/{{ irb.netmask }} vrrp-group 1 accept-data
+{% else %} 
+set interfaces irb unit {{ irb.tag }} family inet address {{ irb.backup }}/{{ irb.netmask }} vrrp-group 1 virtual-address {{ irb.vip }}
+set interfaces irb unit {{ irb.tag }} family inet address {{ irb.backup }}/{{ irb.netmask }} vrrp-group 1 priority 110
+set interfaces irb unit {{ irb.tag }} family inet address {{ irb.backup }}/{{ irb.netmask }} vrrp-group 1 no-preempt
+set interfaces irb unit {{ irb.tag }} family inet address {{ irb.backup }}/{{ irb.netmask }} vrrp-group 1 accept-data
+{% endif %}
+set vlans {{ irb.name }} l3-interface irb.{{ irb.tag }}
+{% endfor %}
+{% endif %}
+

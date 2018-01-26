@@ -1,0 +1,5 @@
+---
+- name: Generate Distro Switch Configuration Files
+  template: src=distro.j2 dest={{ playbook_dir }}/Configs/{{item.name}}-config.set
+  with_items: "{{distro_switches}}"
+
